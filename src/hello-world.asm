@@ -18,7 +18,7 @@
 
 	org	0x0c00
 
-	ldx	#text
+	leax	text,pcr
 loop	lda	,x+
 	beq	end
 	jsr	OUTCH
