@@ -22,6 +22,8 @@
 		bsr	restorescreen
 		rts
 
+* Output character map
+* Output the complete character map as 8 lines starting at the 3rd screen line.
 charactermap	ldx	#$0440
 		clra
 1		sta	,x+
@@ -29,6 +31,8 @@ charactermap	ldx	#$0440
 		bne	1b
 		rts
 
+* Initialize screen
+* Stores the current text screen content and then blanks the screen.
 initscreen	ldx	#$0400
 		leay	screenstate,pcr
 		ldb	#96
@@ -39,6 +43,8 @@ initscreen	ldx	#$0400
 		blo	1b
 		rts
 
+* Restore screen
+* Restores screen content saved by initscreen.
 restorescreen	ldx	#$0400
 		leay	screenstate,pcr
 1		ldd	,y++
@@ -47,8 +53,13 @@ restorescreen	ldx	#$0400
 		blo	1b
 		rts
 
+* Get keypress
+* Wait for a keypress and return the key code
+*
+* Outputs:	A	Key code of key pressed
+* Modifies:	A, CC
 getkey		jsr	INCHAR
 		beq	getkey
 		rts
 
-screenstate	rmb	512
+screenstate	rmb	512		; Area for storing screen state, set by initscreen
