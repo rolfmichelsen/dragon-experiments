@@ -1,6 +1,6 @@
 BINDIR = bin
 VPATH = src
-BINS = $(addprefix $(BINDIR)/, hello-world.bin )
+BINS = $(addprefix $(BINDIR)/, hello-world.bin characterset.bin )
 ASM = asm6809.exe --dragondos
 
 $(BINDIR)/%.bin : %.asm
@@ -9,3 +9,4 @@ $(BINDIR)/%.bin : %.asm
 all: $(BINS)
 
 hello-world.bin: hello-world.asm dragon.asm
+characterset.bin: characterset.asm dragon.asm
