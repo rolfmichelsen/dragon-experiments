@@ -23,6 +23,11 @@
 		ldb	#$ff			; inverse video
 		bsr	outstring
 
+		ldx	#$05e5			; output exit instructions
+		leay	exitstr,pcr
+		clrb
+		bsr	outstring
+
 		bsr	charactermap
 		bsr	getkey
 		bsr	restorescreen
@@ -94,5 +99,6 @@ getkey		jsr	INCHAR
 		rts
 
 headerstr	fcc	"DRAGON CHARACTER MAP            ",0
+exitstr		fcc	"PRESS [BREAK] TO EXIT",0
 
 screenstate	rmb	512		; Area for storing screen state, set by initscreen
