@@ -17,10 +17,41 @@
 		org	$0c00
 
 		bsr	initscreen
+
+		ldx	#$0400			; Output screen header
+		leay	headerstr,pcr
+		ldb	#$ff			; inverse video
+		bsr	outstring
+
 		bsr	charactermap
 		bsr	getkey
 		bsr	restorescreen
 		rts
+
+
+* Output a string to the screen.  The string must be terminated by a
+* null byte.
+*
+* Inputs:	X	Screen address for output
+*		Y	Pointer to text string
+*		B	Non-zero for reverse video
+* Outputs:
+outstring	pshs	d
+1		lda	,y+
+		beq	2f
+		bita	#$80		; block graphic character
+		bne	3f
+		bita	#$40		; alphabet
+		bne	4f
+		adda	#$40
+4		tstb
+		beq	3f
+		suba	#$40
+3		sta	,x+
+		bra	1b
+2		puls	d
+		rts
+
 
 * Output character map
 * Output the complete character map as 8 lines starting at the 3rd screen line.
@@ -61,5 +92,7 @@ restorescreen	ldx	#$0400
 getkey		jsr	INCHAR
 		beq	getkey
 		rts
+
+headerstr	fcc	"DRAGON CHARACTER MAP            ",0
 
 screenstate	rmb	512		; Area for storing screen state, set by initscreen
