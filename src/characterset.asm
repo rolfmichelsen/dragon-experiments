@@ -40,7 +40,8 @@
 * Inputs:	X	Screen address for output
 *		Y	Pointer to text string
 *		B	Non-zero for reverse video
-* Outputs:
+* Outputs:	X	Screen address of next output position
+*		Y	Pointer to first byte after string
 outstring	pshs	d
 1		lda	,y+
 		beq	2f
