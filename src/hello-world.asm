@@ -21,7 +21,7 @@
 	leax	text,pcr
 loop	lda	,x+
 	beq	end
-	jsr	OUTCH
+	jsr	OUTCHAR
 	bra	loop
 end	rts
 
