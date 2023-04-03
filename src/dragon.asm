@@ -45,6 +45,11 @@ OUTCHAR		equ	$800c
 PRINTCHAR	equ	$800f
 
 * Update joystick readings
+*
+* See JOYRIGHTX, JOYRIGHTY, JOYLEFTX and JOYLEFTY for the position of each
+* joystick after calling this function.
+*
+* Modifies: 	all
 JOYSTICK	equ	$8012
 
 
@@ -53,6 +58,30 @@ JOYSTICK	equ	$8012
 *
 
 CURSORPOS	equ	$88		; memory address of current cusros position
+
+* Joystick positions set by a call to JOYSTICK
+JOYRIGHTX	equ	$15a		; x axis position of right joystick [0-63]
+JOYRIGHTY	equ	$1fb		; y axis position of right joystick [0-63]
+JOYLEFTX	equ	$1fc		; x axis position of left joystick [0-63]
+JOYLEFTY	equ	$1fd		; y axis position of left joystick [0-63]
+
+* PIA refisters
+PIA0		equ	$ff00		; PIA0 base address
+PIA1		equ	$ff20		; PIA1 base address
+
+PIA0DDRA	equ	PIA0		; data direction register
+PIA0PDRA	equ	PIA0		; peripheral data register
+PIA0CRA		equ	(PIA0+1)	; control register
+PIA0DDRB	equ	(PIA0+2)
+PIA0PDRB	equ	(PIA0+2)
+PIA0CRB		equ	(PIA0+3)
+PIA1DDRA	equ	PIA1
+PIA1PDRA	equ	PIA1
+PIA1CRA		equ	(PIA1+1)
+PIA1DDRB	equ	(PIA1+2)
+PIA1PDRB	equ	(PIA1+2)
+PIA1CRB		equ	(PIA1+3)
+
 
 
 *
