@@ -18,11 +18,77 @@
 
 		org	$0c00
 
-		bsr	initscreen
-		bsr	outputlegend
-		bsr	getkey
-		bsr	restorescreen
+		lbsr	initscreen
+		lbsr	outputlegend
+		lbsr	main
+		lbsr	restorescreen
 		rts
+
+* The main program loop.
+*   1. Read joystick values
+*   2. Update screen with joystick readings
+*   3. Check joystick button status
+*   4. Update screen with joystick button status
+*   5. Check for keypress and exit
+*   6. Repeat...
+main		jsr	JOYSTICK
+		lda 	JOYLEFTX
+		ldx	#textstart + (15*32) + 5
+		bsr	outjoystick
+		lda	JOYLEFTY
+		ldx	#textstart + (15*32) + 8
+		bsr	outjoystick
+		lda	JOYRIGHTX
+		ldx	#textstart + (15*32) + 23
+		bsr	outjoystick
+		lda	JOYRIGHTY
+		ldx	#textstart + (15*32) + 26
+		bsr	outjoystick
+
+		jsr	INCHAR
+		beq	main
+
+		rts
+
+* Outputs a joystick axis reading to the screen
+*
+* Inputs:	A	Joystick reading [0-63]
+*		X	Output memory location of first digit
+* Outputs:	X	Input X incremebted by 2
+* Destroyed:	D
+outjoystick	bsr	bin2bcd
+		tfr	b,a
+		lsra
+		lsra
+		lsra
+		lsra
+		adda	#48
+		sta	,x+
+		andb	#$0f
+		addb	#48
+		stb	,x+
+		rts
+
+
+* Convert a binary value to its BCD representation
+*
+* Inputs:	A	Binary value [0, 100)
+* Outputs:	B	BCD value
+bin2bcd		pshs	a
+		clrb
+1		cmpa	#10
+		blo	2f
+		addb	#$10
+		suba	#10
+		bra	1b
+2		tsta
+		beq	3f
+		incb
+		deca
+		bra	2b
+3		puls	a
+		rts
+
 
 * Output a string to the screen.  The string must be terminated by a
 * null byte.
