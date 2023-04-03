@@ -65,6 +65,11 @@ JOYRIGHTY	equ	$1fb		; y axis position of right joystick [0-63]
 JOYLEFTX	equ	$1fc		; x axis position of left joystick [0-63]
 JOYLEFTY	equ	$1fd		; y axis position of left joystick [0-63]
 
+
+textstart	equ	$0400		; start of text screen memory
+textend		equ	$0600		; end of text screen memory
+
+
 * PIA refisters
 PIA0		equ	$ff00		; PIA0 base address
 PIA1		equ	$ff20		; PIA1 base address
