@@ -31,7 +31,7 @@
 *   4. Update screen with joystick button status
 *   5. Check for keypress and exit
 *   6. Repeat...
-main		jsr	JOYSTICK
+main		jsr	JOYSTICK			; read and dislpay joystick readings
 		lda 	JOYLEFTX
 		ldx	#textstart + (15*32) + 5
 		bsr	outjoystick
@@ -44,6 +44,16 @@ main		jsr	JOYSTICK
 		lda	JOYRIGHTY
 		ldx	#textstart + (15*32) + 26
 		bsr	outjoystick
+
+		ldx	#textstart + (15*32) + 11	; check joystick buttons
+		lda	PIA0DDRA
+		anda	#$02
+		bsr	outbutton
+
+		ldx	#textstart + (15*32) + 29
+		lda	PIA0DDRA
+		anda	#$01
+		bsr	outbutton
 
 		jsr	INCHAR
 		beq	main
@@ -67,6 +77,22 @@ outjoystick	bsr	bin2bcd
 		andb	#$0f
 		addb	#48
 		stb	,x+
+		rts
+
+* Output joystick button indicator to the screen
+*
+* Inputs:	A	Button status (0 for button pressed)
+*		X	Screen memory position for output
+* Destroy:	A, X
+outbutton	tsta
+		beq	1f
+		lda	#32			; clear button indicator
+		sta	,x+
+		sta	,x+
+		rts
+1		lda	#97			; set button indicator
+		sta	,x+
+		sta	,x+
 		rts
 
 
