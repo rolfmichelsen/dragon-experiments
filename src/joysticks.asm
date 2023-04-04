@@ -66,7 +66,7 @@ main		jsr	JOYSTICK			; read and dislpay joystick readings
 		anda	#$01
 		bsr	outbutton
 
-		jsr	INCHAR
+		jsr	INCHAR				; run until a key has been pressed
 		beq	main
 
 		rts
@@ -90,6 +90,7 @@ outjoystick	bsr	bin2bcd
 		stb	,x+
 		rts
 
+
 * Output joystick button indicator to the screen
 *
 * Inputs:	A	Button status (0 for button pressed)
@@ -105,6 +106,7 @@ outbutton	tsta
 		sta	,x+
 		sta	,x+
 		rts
+
 
 * Show gfraphical representation of joystick position
 *
@@ -183,6 +185,7 @@ outstring	pshs	d
 2		puls	d
 		rts
 
+
 * Get keypress
 * Wait for a keypress and return the key code
 *
@@ -193,6 +196,10 @@ getkey		jsr	INCHAR
 		rts
 
 
+* Output fixed screen text
+*
+* Inputs:	-
+* Destroys:	X, Y
 outputlegend	ldx	#textstart
 		leay	legendheader,pcr
 		ldb	#1
@@ -200,6 +207,7 @@ outputlegend	ldx	#textstart
 		ldx	#textstart + (15*32)
 		bsr	outstring
 		rts
+
 
 * Initialize screen
 * Stores the current text screen content and then blanks the screen.
@@ -212,6 +220,7 @@ initscreen	ldx	#textstart
 		cmpx	#textend
 		blo	1b
 		rts
+
 
 * Restore screen
 * Restores screen content saved by initscreen.
