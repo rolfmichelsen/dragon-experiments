@@ -45,6 +45,17 @@ main		jsr	JOYSTICK			; read and dislpay joystick readings
 		ldx	#textstart + (15*32) + 26
 		bsr	outjoystick
 
+		leay	joystate,pcr
+		lda	JOYLEFTX			; show graphical representation of joystick position
+		ldb	JOYLEFTY
+		ldx	#textstart + 4*32
+		bsr	drawposition
+
+		lda	JOYRIGHTX
+		ldb	JOYRIGHTY
+		ldx	#textstart + 4*32 + 16
+		bsr	drawposition
+
 		ldx	#textstart + (15*32) + 11	; check joystick buttons
 		lda	PIA0DDRA
 		anda	#$02
@@ -93,6 +104,38 @@ outbutton	tsta
 1		lda	#97			; set button indicator
 		sta	,x+
 		sta	,x+
+		rts
+
+* Show gfraphical representation of joystick position
+*
+* Inputs:	A	Joystick X axis position [0,63]
+*		B	Joystick Y axis position [0,63]
+*		X	Base screen position for drawing joystick position
+*		Y	Area for storing last used screen position
+* Outputs:	Y	Pointer to first byte following the last used screen position
+* Destroys:	D, X, U
+drawposition	pshs	a			; restore previous screen state
+		lda	#96
+		ldu	,y
+		sta	,u
+		puls	a
+
+		lsra				; reduce x axis range to [0,16]
+		lsra
+		lsrb				; reduce y axis range to [0,8]
+		lsrb
+		lsrb
+
+		pshs	a
+		clr	,-s
+		lda	#32
+		mul
+		addd	,s++
+		leax	d,x
+		lda	#128
+		sta	,x
+		stx 	,y++
+
 		rts
 
 
@@ -183,5 +226,9 @@ restorescreen	ldx	#$0400
 
 legendheader	fcc	"         JOYSTICK TEST          ",0
 legendmetrics	fcc	"LEFT             RIGHT          ",0
+
+joystate	rmb	2		; left joystick screen memory position
+		rmb	2		; right joystick screen memory position
+
 screenstate	rmb	512		; Area for storing screen state, set by initscreen
 
